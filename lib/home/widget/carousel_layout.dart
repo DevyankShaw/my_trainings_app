@@ -53,7 +53,7 @@ class _CarouselLayoutState extends State<CarouselLayout> {
           top: max(height / 5, 150) * 0.25,
           bottom: max(height / 5, 150) * 0.25,
           child: InkWell(
-            onTap: () {},
+            onTap: () => showSnackBar(),
             child: Container(
               width: 20,
               color: Colors.black12,
@@ -69,7 +69,7 @@ class _CarouselLayoutState extends State<CarouselLayout> {
           top: max(height / 5, 150) * 0.25,
           bottom: max(height / 5, 150) * 0.25,
           child: InkWell(
-            onTap: () {},
+            onTap: () => showSnackBar(),
             child: Container(
               width: 20,
               color: Colors.black12,
@@ -81,6 +81,14 @@ class _CarouselLayoutState extends State<CarouselLayout> {
           ),
         ),
       ],
+    );
+  }
+
+  void showSnackBar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Under development. Use swipe carousel instead!'),
+      ),
     );
   }
 }

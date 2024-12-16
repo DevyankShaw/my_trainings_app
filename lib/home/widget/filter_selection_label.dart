@@ -23,17 +23,18 @@ class FilterSelectionLabel extends StatelessWidget {
         child: Row(
           children: [
             if (isSelected) Container(color: Colors.redAccent, width: 8),
-            Padding(
-              padding: EdgeInsets.only(
-                left: isSelected ? 30 : 38,
-                right: isSelected ? 30 : 38,
-              ),
-              child: Text(
-                label,
-                style: textTheme.labelMedium?.copyWith(
-                  color: Colors.black,
-                  fontWeight: isSelected ? FontWeight.bold : null,
-                  fontSize: 18,
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: isSelected ? 30 : 38,
+                ),
+                child: Text(
+                  label,
+                  style: textTheme.labelMedium?.copyWith(
+                    color: Colors.black,
+                    fontWeight: isSelected ? FontWeight.bold : null,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             )

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -25,28 +27,32 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: 16),
           CarouselLayout(
             onTap: (carouselCard) {},
             carouselCards: carouselCards,
           ),
-          OutlinedButton.icon(
-            onPressed: () {
-              openModalSheet(context, textTheme);
-            },
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.all(8),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              side: const BorderSide(color: Colors.grey),
-            ),
-            label: Text(
-              'Filter',
-              style: textTheme.titleSmall
-                  ?.copyWith(color: Colors.grey, fontWeight: FontWeight.w500),
-            ),
-            icon: Icon(
-              Icons.filter_alt_outlined,
-              color: Colors.grey,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: OutlinedButton.icon(
+              onPressed: () {
+                openModalSheet(context, textTheme);
+              },
+              style: OutlinedButton.styleFrom(
+                padding: EdgeInsets.all(8),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
+                side: const BorderSide(color: Colors.grey),
+              ),
+              label: Text(
+                'Filter',
+                style: textTheme.titleSmall
+                    ?.copyWith(color: Colors.grey, fontWeight: FontWeight.w500),
+              ),
+              icon: Icon(
+                Icons.filter_alt_outlined,
+                color: Colors.grey,
+              ),
             ),
           ),
           Consumer<TrainingProvider>(
@@ -54,8 +60,8 @@ class HomeScreen extends StatelessWidget {
               return Expanded(
                 child: ListView.separated(
                   itemCount: trainingProvider.filteredTrainings.length,
-                  separatorBuilder: (_, __) => SizedBox(height: 16),
-                  padding: EdgeInsets.all(16),
+                  separatorBuilder: (_, __) => SizedBox(height: 12),
+                  padding: EdgeInsets.all(12),
                   itemBuilder: (_, index) {
                     return TrainingCardView(
                       onTap: () {
@@ -88,6 +94,7 @@ class HomeScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(),
       backgroundColor: Colors.white,
       builder: (modalContext) {
+        final width = MediaQuery.sizeOf(context).width;
         return Column(
           children: [
             Padding(
@@ -121,55 +128,58 @@ class HomeScreen extends StatelessWidget {
               color: Colors.grey.shade400,
               height: 0,
             ),
-            Consumer<TrainingProvider>(
-              builder: (context, value, child) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 200,
-                      child: Column(
-                        children: value.filters.keys
-                            .map((selectionLabel) => FilterSelectionLabel(
-                                  label: selectionLabel,
-                                  isSelected: value.selectedFilterLabel ==
-                                      selectionLabel,
-                                  onTap: () {
-                                    context
-                                        .read<TrainingProvider>()
-                                        .setSelectedFilterLabel(selectionLabel);
-                                  },
-                                ))
-                            .toList(),
+            Expanded(
+              child: Consumer<TrainingProvider>(
+                builder: (context, value, child) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: min(width * 0.35, 200),
+                        child: Column(
+                          children: value.filters.keys
+                              .map((selectionLabel) => FilterSelectionLabel(
+                                    label: selectionLabel,
+                                    isSelected: value.selectedFilterLabel ==
+                                        selectionLabel,
+                                    onTap: () {
+                                      context
+                                          .read<TrainingProvider>()
+                                          .setSelectedFilterLabel(
+                                              selectionLabel);
+                                    },
+                                  ))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: FilterSelectionView(
-                        selectedFilterLabel: value.selectedFilterLabel,
-                        filterSelectionViewInfos:
-                            value.filters[value.selectedFilterLabel]
-                                    ?.map(
-                                      (selectionValue) =>
-                                          FilterSelectionViewInfo(
-                                        label: selectionValue,
-                                        isSelected: value.selectedFilters[
-                                                    value.selectedFilterLabel]
-                                                ?.contains(selectionValue) ??
-                                            false,
-                                      ),
-                                    )
-                                    .toList() ??
-                                [],
-                        onCheckboxLabelChanged: (value, label) {
-                          context
-                              .read<TrainingProvider>()
-                              .updateSelectedFilter(value, label);
-                        },
-                      ),
-                    )
-                  ],
-                );
-              },
+                      Expanded(
+                        child: FilterSelectionView(
+                          selectedFilterLabel: value.selectedFilterLabel,
+                          filterSelectionViewInfos:
+                              value.filters[value.selectedFilterLabel]
+                                      ?.map(
+                                        (selectionValue) =>
+                                            FilterSelectionViewInfo(
+                                          label: selectionValue,
+                                          isSelected: value.selectedFilters[
+                                                      value.selectedFilterLabel]
+                                                  ?.contains(selectionValue) ??
+                                              false,
+                                        ),
+                                      )
+                                      .toList() ??
+                                  [],
+                          onCheckboxLabelChanged: (value, label) {
+                            context
+                                .read<TrainingProvider>()
+                                .updateSelectedFilter(value, label);
+                          },
+                        ),
+                      )
+                    ],
+                  );
+                },
+              ),
             ),
           ],
         );
