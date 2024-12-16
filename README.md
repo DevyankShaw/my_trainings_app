@@ -1,16 +1,8 @@
 # my_trainings_app
 
-A new Flutter project.
+This app includes features like carousels by swipe and manual(under development), display list of training, filter by category, and navigate to training details 
 
-## Getting Started
+## Demo
 
-This project is a starting point for a Flutter application.
+https://github.com/user-attachments/assets/61a0c6f7-56d1-4b75-bac7-cdba89dc4cb6
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
