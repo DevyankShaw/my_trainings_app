@@ -7,10 +7,12 @@ class FilterSelectionView extends StatefulWidget {
     super.key,
     required this.filterSelectionViewInfos,
     required this.onCheckboxLabelChanged,
+    required this.selectedFilterLabel,
   });
 
   final List<FilterSelectionViewInfo> filterSelectionViewInfos;
   final Function(bool value, String label) onCheckboxLabelChanged;
+  final String selectedFilterLabel;
 
   @override
   State<FilterSelectionView> createState() => _FilterSelectionViewState();
@@ -30,10 +32,20 @@ class _FilterSelectionViewState extends State<FilterSelectionView> {
 
   @override
   void didUpdateWidget(covariant FilterSelectionView oldWidget) {
-    controller.clear();
-    copyFilterSelectionViewInfos
-      ..clear()
-      ..addAll(widget.filterSelectionViewInfos);
+    if (oldWidget.selectedFilterLabel != widget.selectedFilterLabel) {
+      controller.clear();
+      copyFilterSelectionViewInfos
+        ..clear()
+        ..addAll(widget.filterSelectionViewInfos);
+    } else {
+      copyFilterSelectionViewInfos
+        ..clear()
+        ..addAll(widget.filterSelectionViewInfos
+            .where((data) => data.label
+                .toLowerCase()
+                .contains(controller.text.toLowerCase()))
+            .toList());
+    }
     super.didUpdateWidget(oldWidget);
   }
 

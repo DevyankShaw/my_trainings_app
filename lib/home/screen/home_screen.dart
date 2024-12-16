@@ -6,14 +6,9 @@ import '../service/service.dart';
 import '../widget/widget.dart';
 import 'training_detail_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -36,102 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           OutlinedButton.icon(
             onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                shape: RoundedRectangleBorder(),
-                backgroundColor: Colors.white,
-                builder: (modalContext) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8,
-                          left: 16,
-                          right: 6,
-                          bottom: 8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Sort and Filters',
-                              style: textTheme.headlineSmall
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(modalContext);
-                              },
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        color: Colors.grey.shade400,
-                        height: 0,
-                      ),
-                      Consumer<TrainingProvider>(
-                        builder: (context, value, child) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: 200,
-                                child: Column(
-                                  children: value.filters.keys
-                                      .map((selectionLabel) =>
-                                          FilterSelectionLabel(
-                                            label: selectionLabel,
-                                            isSelected:
-                                                value.selectedFilterLabel ==
-                                                    selectionLabel,
-                                            onTap: () {
-                                              context
-                                                  .read<TrainingProvider>()
-                                                  .setSelectedFilterLabel(
-                                                      selectionLabel);
-                                            },
-                                          ))
-                                      .toList(),
-                                ),
-                              ),
-                              Expanded(
-                                child: FilterSelectionView(
-                                  filterSelectionViewInfos:
-                                      value.filters[value.selectedFilterLabel]
-                                              ?.map(
-                                                (selectionValue) =>
-                                                    FilterSelectionViewInfo(
-                                                  label: selectionValue,
-                                                  isSelected: value
-                                                          .selectedFilters[value
-                                                              .selectedFilterLabel]
-                                                          ?.contains(
-                                                              selectionValue) ??
-                                                      false,
-                                                ),
-                                              )
-                                              .toList() ??
-                                          [],
-                                  onCheckboxLabelChanged: (value, label) {
-                                    context
-                                        .read<TrainingProvider>()
-                                        .updateSelectedFilter(value, label);
-                                  },
-                                ),
-                              )
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
+              openModalSheet(context, textTheme);
             },
             style: OutlinedButton.styleFrom(
               padding: EdgeInsets.all(8),
@@ -179,6 +79,101 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
+    );
+  }
+
+  Future<dynamic> openModalSheet(BuildContext context, TextTheme textTheme) {
+    return showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(),
+      backgroundColor: Colors.white,
+      builder: (modalContext) {
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 8,
+                left: 16,
+                right: 6,
+                bottom: 8,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Sort and Filters',
+                    style:
+                        textTheme.headlineSmall?.copyWith(color: Colors.black),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(modalContext);
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Divider(
+              color: Colors.grey.shade400,
+              height: 0,
+            ),
+            Consumer<TrainingProvider>(
+              builder: (context, value, child) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: Column(
+                        children: value.filters.keys
+                            .map((selectionLabel) => FilterSelectionLabel(
+                                  label: selectionLabel,
+                                  isSelected: value.selectedFilterLabel ==
+                                      selectionLabel,
+                                  onTap: () {
+                                    context
+                                        .read<TrainingProvider>()
+                                        .setSelectedFilterLabel(selectionLabel);
+                                  },
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    Expanded(
+                      child: FilterSelectionView(
+                        selectedFilterLabel: value.selectedFilterLabel,
+                        filterSelectionViewInfos:
+                            value.filters[value.selectedFilterLabel]
+                                    ?.map(
+                                      (selectionValue) =>
+                                          FilterSelectionViewInfo(
+                                        label: selectionValue,
+                                        isSelected: value.selectedFilters[
+                                                    value.selectedFilterLabel]
+                                                ?.contains(selectionValue) ??
+                                            false,
+                                      ),
+                                    )
+                                    .toList() ??
+                                [],
+                        onCheckboxLabelChanged: (value, label) {
+                          context
+                              .read<TrainingProvider>()
+                              .updateSelectedFilter(value, label);
+                        },
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
