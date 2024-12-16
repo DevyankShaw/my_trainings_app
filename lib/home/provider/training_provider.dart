@@ -42,7 +42,42 @@ class TrainingProvider with ChangeNotifier, DiagnosticableTreeMixin {
     } else {
       _selectedFilters[_selectedFilterLabel]?.remove(label);
     }
+    _filterTrainings();
     notifyListeners();
+  }
+
+  void _filterTrainings() {
+    _filteredTrainings
+        ..clear()
+        ..addAll(_trainings.toList());
+
+    for (var filterMapEntry in _selectedFilters.entries) {
+      final filteredData = switch (filterMapEntry.key) {
+        'Location' => _filteredTrainings
+            .where(
+              (data) => filterMapEntry.value
+                  .contains(data.trainingLocation.split(',').last.trim()),
+            )
+            .toList(),
+        'Training Name' => _filteredTrainings
+            .where(
+              (data) => filterMapEntry.value.contains(data.trainingName),
+            )
+            .toList(),
+        'Trainer' => _filteredTrainings
+            .where(
+              (data) => filterMapEntry.value.contains(data.trainerName),
+            )
+            .toList(),
+        _ => <TrainingCardViewInfo>[],
+      };
+
+      if (filteredData.isNotEmpty) {
+        _filteredTrainings
+          ..clear()
+          ..addAll(filteredData.toList());
+      }
+    }
   }
 
   @override

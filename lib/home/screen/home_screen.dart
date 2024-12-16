@@ -148,18 +148,18 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.grey,
             ),
           ),
-          Selector<TrainingProvider, List<TrainingCardViewInfo>>(
-            selector: (_, data) => data.filteredTrainings,
-            builder: (_, filteredTrainings, __) {
+          Consumer<TrainingProvider>(
+            builder: (_, trainingProvider, __) {
               return Expanded(
                 child: ListView.separated(
-                  itemCount: filteredTrainings.length,
+                  itemCount: trainingProvider.filteredTrainings.length,
                   separatorBuilder: (_, __) => SizedBox(height: 16),
                   padding: EdgeInsets.all(16),
                   itemBuilder: (_, index) {
                     return TrainingCardView(
                       onTap: () {},
-                      trainingCardViewInfo: filteredTrainings[index],
+                      trainingCardViewInfo:
+                          trainingProvider.filteredTrainings[index],
                     );
                   },
                 ),
